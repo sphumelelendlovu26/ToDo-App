@@ -7,7 +7,26 @@ function App() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
+    document.querySelector("input")?.focus();
+  }, []);
+
+  useEffect(() => {
     console.log(tasks);
+  }, [tasks]);
+
+  useEffect(() => {
+    const savedTasks = localStorage.getItem("tasks");
+    if (savedTasks) {
+      const parsedTasks = JSON.parse(savedTasks).map((task) => ({
+        ...task,
+        deleting: false,
+      }));
+      setTasks(parsedTasks);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
   function addTasks() {
@@ -15,11 +34,12 @@ function App() {
     const id = Math.floor(date - Math.random() * 1000);
     if (userInput.trim() !== "") {
       setTasks([...tasks, { text: userInput, id: id }]);
+      userInput("");
     }
   }
   function deleteTask(idToBeDeleted) {
-    const tasksAfterDel = tasks.filter((task) =>
-      task.id !== idToBeDeleted ? { ...task, deleting: true } : task
+    const tasksAfterDel = tasks.map((task) =>
+      task.id === idToBeDeleted ? { ...task, deleting: true } : task
     );
     setTasks(tasksAfterDel);
 
@@ -36,11 +56,15 @@ function App() {
   }
 
   return (
-    <div className="slide-in-right bg-zinc-700 text-gray-100    h-screen p-5 ">
-      <header className="flex  flex-col  items-center w-full px-4">
-        <h1 className="text-center mb-10 font-extrabold text-3xl sd:text-5xl">
-          To Do List
+    <div className="slide-in-right bg-zinc-700 text-gray-100 overflow-x-hidden   h-screen p-5 ">
+      <header className="static flex  flex-col  items-center w-full px-4">
+        <h1 className="text-4xl font-bold mb-4 text-white">
+          What’s on your mind today?
         </h1>
+        <p className="text-lg mb-6 text-white-700 italic">
+          Every idea starts with a single task.
+        </p>
+        <div className="flex space-x-2"></div>
         <div className="flex md:flex-row flex-col flex-grow gap-2 w-full max-w-xl  ">
           <input
             className="outline-indigo-600 border-none bg-zinc-500 p-4  w-full text-white rounded"
