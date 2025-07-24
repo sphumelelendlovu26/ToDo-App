@@ -1,6 +1,8 @@
 function TaskComponent({ task, deleteTask }) {
   return (
-    <div className=" p-3 m-2 flex  hover:scale-101 hover:border-indigo-500 transition duration-300  hover:border justify-between bg-zinc-600 rounded">
+    <div
+      className={`${task.deleting ? "slide-out-right" : "slide-in-right"}  p-3 m-2 flex  hover:scale-101 hover:border-indigo-500 transition duration-300  hover:border justify-between bg-zinc-600 rounded`}
+    >
       <div>
         <p className=" text-center  ">{task.text}</p>
       </div>
